@@ -35,7 +35,7 @@ function compareCards() {
 
 function preloadImages(num) {
     let imagesList = []
-    for(let i=0; i < num; i++) {
+    for(let i=1; i <= num; i++) {
         var newImage = new Image()
         newImage.src = 'images/' + i + '.jpg'
         imagesList.push(newImage)
