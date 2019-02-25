@@ -33,8 +33,21 @@ function compareCards() {
     cardsCurrentlyTurnedOver = [] //reset list
 }
 
+function preloadImages(num) {
+    let imagesList = []
+    for(let i=0; i < num; i++) {
+        var newImage = new Image()
+        newImage.src = 'images/' + i + '.jpg'
+        imagesList.push(newImage)
+    }
+}
+
+//main routine
 let cardsList = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9]
 shuffle(cardsList)
+
+//preload the images of numbered cards
+preloadImages(cardsList.length / 2)
 
 let divsList = document.getElementsByClassName('cards')
 
