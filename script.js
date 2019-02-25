@@ -20,6 +20,11 @@ function compareCards() {
         //make the matched cards invisible (but still take up space)
         divsList[firstIndex].style.visibility = 'hidden'
         divsList[secondIndex].style.visibility = 'hidden'
+        //check if the game has been won
+        if(allCardsCleared()) {
+            console.log('you win')
+            document.getElementById('win-message').style.visibility = 'visible'
+        }
     } 
     //if the cards don't match
     else { 
@@ -30,6 +35,8 @@ function compareCards() {
     cardsCurrentlyTurnedOver = [] //reset list
 }
 
+//preloads the card images so the user doesn't have to wait for them to load when 
+//the card is turned over for the first time
 function preloadImages(num) {
     let imagesList = []
     for(let i=1; i <= num; i++) {
@@ -37,6 +44,16 @@ function preloadImages(num) {
         newImage.src = 'images/' + i + '.jpg'
         imagesList.push(newImage)
     }
+}
+
+//check if the game has been won
+function allCardsCleared() {
+    for(let i=0; i<divsList.length; i++) {
+        if(divsList[i].style.visibility != 'hidden') {
+            return false
+        }
+    }
+    return true
 }
 
 //main routine
@@ -63,8 +80,7 @@ for(let clickedCardIndex in cardsList) {
             return; //the rest of the function doesn't run
         }
         
-        //flip over card that was clicked
-        divsList[clickedCardIndex].innerHTML = "<img src=\"images/" + cardsList[clickedCardIndex] + ".jpg\">" 
+        divsList[clickedCardIndex].innerHTML = "<img src=\"images/" + cardsList[clickedCardIndex] + ".jpg\">" //flip over card that was clicked
         cardsCurrentlyTurnedOver.push(clickedCardIndex)
 
         if(cardsCurrentlyTurnedOver.length == 2) {
