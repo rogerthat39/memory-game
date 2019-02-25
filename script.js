@@ -17,12 +17,14 @@ function compareCards() {
 
     //if the cards match
     if(cardsList[firstIndex] == cardsList[secondIndex]) {
-        //remove image from matched cards
-        divsList[firstIndex].innerHTML = ""
-        divsList[secondIndex].innerHTML = ""
-        //add cards to cardsFound list
-        cardsFound.push(firstIndex)
-        cardsFound.push(secondIndex)
+        //make the matched cards invisible (but still take up space)
+        divsList[firstIndex].style.visibility = 'hidden'
+        divsList[secondIndex].style.visibility = 'hidden'
+        //check if the game has been won
+        if(allCardsCleared()) {
+            console.log('you win')
+            document.getElementById('win-message').style.visibility = 'visible'
+        }
     } 
     //if the cards don't match
     else { 
@@ -33,26 +35,48 @@ function compareCards() {
     cardsCurrentlyTurnedOver = [] //reset list
 }
 
+//preloads the card images so the user doesn't have to wait for them to load when 
+//the card is turned over for the first time
+function preloadImages(num) {
+    let imagesList = []
+    for(let i=1; i <= num; i++) {
+        var newImage = new Image()
+        newImage.src = 'images/' + i + '.jpg'
+        imagesList.push(newImage)
+    }
+}
+
+//check if the game has been won
+function allCardsCleared() {
+    for(let i=0; i<divsList.length; i++) {
+        if(divsList[i].style.visibility != 'hidden') {
+            return false
+        }
+    }
+    return true
+}
+
+//main routine
 let cardsList = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9]
 shuffle(cardsList)
 
+//preload the images of numbered cards
+preloadImages(cardsList.length / 2)
+
 let divsList = document.getElementsByClassName('cards')
 
-//both lists will contain index nums (i) corresponding to values in the cardsList
+//the list will contain index nums (i) corresponding to values in the cardsList
 let cardsCurrentlyTurnedOver = [] //hold values temporarily to compare them when 2 cards are flipped over
-let cardsFound = [] //add cards to this list when they have been removed from play
 
 for(let clickedCardIndex in cardsList) {
     divsList[clickedCardIndex].innerHTML = "<img src=\"images/card-back.jpg\">"
     divsList[clickedCardIndex].addEventListener("click", function clickedCard() {
-        //checking if the card clicked has already had a match found, and been removed
-        for(let foundCardIndex in cardsFound) {
-            if(cardsFound[foundCardIndex] == clickedCardIndex) {
-                return; //the rest of the function doesn't run
-            }
-        }
-        //checking if the clicked card has already been clicked (user clicked same card twice)
-        if(cardsCurrentlyTurnedOver.length > 0 && cardsCurrentlyTurnedOver[0] == clickedCardIndex) {
+        //checks if the card clicked has already had a match found, and been removed
+        //checks if the clicked card has already been clicked (user clicked same card twice)
+        //checks if there are already two cards turned over (and in the process of being evaluated)
+        if(divsList[clickedCardIndex].style.visibility == "hidden" || 
+        cardsCurrentlyTurnedOver[0] == clickedCardIndex ||
+        cardsCurrentlyTurnedOver.length == 2) {
             return; //the rest of the function doesn't run
         }
         
